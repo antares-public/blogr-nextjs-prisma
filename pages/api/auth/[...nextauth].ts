@@ -2,11 +2,22 @@ import { NextApiHandler } from "next";
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
-import Adapter from "@next-auth/typeorm-adapter";
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter";
+import { ConnectionOptions } from "typeorm";
+import * as entities from "../../../lib/entities";
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
+
+const connection: ConnectionOptions = {
+  type: "postgres",
+  host: "localhost",
+  port: 5432,
+  username: "postgres",
+  password: "root",
+  synchronize: true,
+  database: "relocator",
+};
 
 const options = {
   providers: [
@@ -26,15 +37,7 @@ const options = {
       from: process.env.EMAIL_FROM,
     }),
   ],
-  // adapters: Adapter({
-  // type: "postgres", // or mysql, postgresql, mssql
-  // database: process.env.DATABASE_URL,
-  // synchronize: true,
-  // }),
-  adapter: TypeORMLegacyAdapter({
-    type: "postgres", // or mysql, postgresql, mssql
-    database: process.env.DATABASE_URL,
-    synchronize: true,
-  }),
+  // @ts-ignore
+  adapter: TypeORMLegacyAdapter(connection, { entities }),
   secret: process.env.SECRET,
 };
