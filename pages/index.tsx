@@ -1,41 +1,15 @@
-import React from "react"
-import { GetServerSideProps, GetStaticProps } from "next"
-import Layout from "../components/Layout"
-import Post, { PostProps } from "../components/Post"
-// pages/index.tsx
-import prisma from '../lib/prisma';
-
-// index.tsx
-export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: { published: true },
-    include: {
-      author: {
-        select: { name: true },
-      },
-    },
-  });
-  return { props: { feed } };
-};
-
+import React from "react";
+import { GetServerSideProps, GetStaticProps } from "next";
+import Layout from "../components/Layout";
+import Post, { PostProps } from "../components/Post";
 
 type Props = {
-  feed: PostProps[]
-}
+  feed: PostProps[];
+};
 
-const Blog: React.FC<Props> = (props) => {
+const Blog: React.FC<Props> = () => {
   return (
     <Layout>
-      <div className="page">
-        <h1>Public Feed</h1>
-        <main>
-          {props.feed.map((post) => (
-            <div key={post.id} className="post">
-              <Post post={post} />
-            </div>
-          ))}
-        </main>
-      </div>
       <style jsx>{`
         .post {
           background: white;
@@ -51,7 +25,7 @@ const Blog: React.FC<Props> = (props) => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
