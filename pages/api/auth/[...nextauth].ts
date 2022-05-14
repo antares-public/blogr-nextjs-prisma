@@ -2,10 +2,9 @@
 
 import { NextApiHandler } from "next";
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import Adapter from "@next-auth/typeorm-adapter";
 import GitHubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
-import prisma from "../../../lib/prisma";
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
@@ -28,6 +27,10 @@ const options = {
       from: process.env.EMAIL_FROM,
     }),
   ],
-  adapter: PrismaAdapter(prisma),
+  adapters: Adapter({
+    type: "postgres", // or mysql, postgresql, mssql
+    database: process.env.DATABASE_URL,
+    synchronize: true,
+  }),
   secret: process.env.SECRET,
 };
