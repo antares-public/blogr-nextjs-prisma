@@ -37,7 +37,7 @@ const options = {
       from: process.env.EMAIL_FROM,
     }),
   ],
-  // @ts-ignore
-  adapter: TypeORMLegacyAdapter(connection, { entities }),
+  // adapter: TypeORMLegacyAdapter(connection, { entities }),
+  adapter: TypeORMLegacyAdapter(connection),
   secret: process.env.SECRET,
 };
